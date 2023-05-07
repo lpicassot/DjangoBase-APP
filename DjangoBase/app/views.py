@@ -34,18 +34,16 @@ class ProductView(APIView):
 class SearchCoordsView(APIView):
     def get(self, request, format=None):
         product_name = request.query_params.get('product')
-        print(product_name)
         
         # Create list of all products names
         all_product_names = list(Product.objects.values_list('name', flat=True))
-        print(all_product_names)
 
         # Execute longest_word_finder
         w = WordFinder()
         filtered_products_name = w.longest_word(all_product_names, product_name)
 
         # Filter Product Objects
-        filtered_products = Product.objects.filter(name__in=filtered_products_name)
+        filtered_products = Product.objects.filter(name=filtered_products_name)
         if filtered_products.count() > 0:
             # Serialize vlaue
             serializer = ProductSerializer(filtered_products, many=True)
